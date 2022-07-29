@@ -70,7 +70,7 @@ git clone https://github.com/malware-atlas/atlas
 
 ## Test Run
 
-There is a HelloWorld rule that comes in default, it can be used to test the installation.
+The [HelloWorld](https://github.com/MALWARE-ATLAS/ATLAS/blob/master/HelloWorld.atl) rule can be used to test the installation.
 
 To test it:
 
