@@ -11,4 +11,5 @@ ATLAS/
 # Python
 venv/
 __pycache__
-setup.py
+malware_atlas.egg-info/
+dist/

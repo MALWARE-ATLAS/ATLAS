@@ -1,0 +1,11 @@
+exclude ATLAS/
+exclude docs/
+
+exclude *.swp
+exclude .DS_Store
+
+exclude .vscode/
+
+exclude venv/
+exclude __pycache__
+exclude setup.py
