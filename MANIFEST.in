@@ -1,5 +1,3 @@
-include src/lib/
-
 exclude ATLAS/
 exclude docs/
 
