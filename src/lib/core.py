@@ -1,10 +1,3 @@
-# Naming convention:
-# {architecture_malware_type_name_version}
-# dotnet_remcos_custom_encKey
-# gen_none_crpyt_xorEnc
-# gen_none_data_pngExtract
-# gen_remcos_gzipImageProcess_1
-
 import re
 import sys
 import base64
@@ -16,7 +9,7 @@ from subprocess import Popen, TimeoutExpired, PIPE
 
 from typing import Dict, List
 
-from lib import atl_importer
+from . import atl_importer
 
 POWERSHELL_DICT = {
                 'Linux': 'pwsh',
@@ -68,24 +61,24 @@ def powershell_executor(script_name: tuple, *args) -> any:
             ')
         proc.stdin.flush()
         
-        # for i in range(len(args)):
-        #     temp = ""
-        #     if type(args[i]) is str:
-        #         temp = args[i]
-        #         for j in range(0, int(len(temp) / 10000) + 1):
-        #             proc.stdin.write('$arg{}=$arg{}+"{}";\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
-        #             proc.stdin.flush()
-        #             #print('$arg{}=$arg{}+"{}"\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
-        #     elif type(args[i]) is bytes:
-        #         temp = base64.b64encode(args[i]).decode()
-        #         for j in range(0, int(len(temp) / 10000) + 1):
-        #             proc.stdin.write('$encoded_arg{}=$encoded_arg{}+"{}";\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
-        #             proc.stdin.flush()
+        for i in range(len(args)):
+            temp = ""
+            if type(args[i]) is str:
+                temp = args[i]
+                for j in range(0, int(len(temp) / 10000) + 1):
+                    proc.stdin.write('$arg{}=$arg{}+"{}";\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
+                    proc.stdin.flush()
+                    #print('$arg{}=$arg{}+"{}"\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
+            elif type(args[i]) is bytes:
+                temp = base64.b64encode(args[i]).decode()
+                for j in range(0, int(len(temp) / 10000) + 1):
+                    proc.stdin.write('$encoded_arg{}=$encoded_arg{}+"{}";\r\n'.format(i + 1, i + 1, temp[j * 10000:(j + 1) * 10000]))
+                    proc.stdin.flush()
                 
-        #         proc.stdin.write('$arg{}=([System.Convert]::FromBase64String($encoded_arg{}));'.format(i + 1, i + 1))
-        #         proc.stdin.flush()
+                proc.stdin.write('$arg{}=([System.Convert]::FromBase64String($encoded_arg{}));'.format(i + 1, i + 1))
+                proc.stdin.flush()
 
-        #     args_list.append("$arg{}".format(i + 1))
+            args_list.append("$arg{}".format(i + 1))
         proc.stdin.write('\
                 try {{\
                     $result={0} {1};\

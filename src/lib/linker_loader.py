@@ -7,7 +7,7 @@ from glob import glob
 from pprint import pprint
 from collections import OrderedDict
 
-from lib import core, expect, error
+from . import core, expect, error
 
 
 LEXICON = {

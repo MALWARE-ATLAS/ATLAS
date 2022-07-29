@@ -1,8 +1,8 @@
 # pyproject.toml
 
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "malware-atlas"
@@ -31,7 +31,7 @@ dev = ["python-magic"]
 Homepage = "https://github.com/malware-atlas/atlas"
 
 [project.scripts]
-atlas = "atlas:main"
+atlas = "src.atlas:main"
 
 [tool.bumpver]
 current_version = "0.1.0"
