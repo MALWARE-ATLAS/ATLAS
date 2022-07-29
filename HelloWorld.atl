@@ -1,0 +1,9 @@
+meta:
+    name: "Hello World"
+    description: "Traditional way to start."
+    version: "1.0"
+
+chain:
+    printer:
+        input: 'Hello World, P.S. ATLAS.'
+        func: printer

@@ -1,0 +1,3 @@
+Mind the environment the ATLAS runs. It is adviced to run it inside an isolated VM or container.
+
+Also, users must take utmost care about the rules content. Do not run outsourced rules without examine them.

@@ -1,0 +1,55 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "malware-atlas"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+authors = [{ name = "Mert Degirmenci"}]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["malware", "atlas", "threat"]
+dependencies = [
+    "PyYAML",
+    "requests",
+    'tomli; python_version < "3.11"',
+]
+requires-python = ">=3.6"
+
+[project.optional-dependencies]
+dev = ["python-magic"]
+
+[project.urls]
+Homepage = "https://github.com/malware-atlas/atlas"
+
+[project.scripts]
+atlas = "atlas:main"
+
+[tool.bumpver]
+current_version = "0.1.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+    'version = "{version}"'
+]
+"README.md" = [
+    "{version}",
+    "{pep440_version}",
+]
+
+[tool.setuptools]
+py-modules = []

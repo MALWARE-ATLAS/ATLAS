@@ -1,0 +1,14 @@
+# Test rules
+ATLAS/
+
+# OS artifacts
+*.swp
+.DS_Store
+
+# VSCode files
+.vscode/
+
+# Python
+venv/
+__pycache__
+setup.py
