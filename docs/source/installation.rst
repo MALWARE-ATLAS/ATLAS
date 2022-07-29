@@ -17,10 +17,8 @@ Clone directly from Github:
 Test Run
 ========
 
-A **HelloWorld** rule comes in default; it can be used to test the installation.
+The `HelloWorld <https://github.com/MALWARE-ATLAS/ATLAS/blob/master/HelloWorld.atl>`_ rule can be used to test the installation.
 
 .. code-block:: console
 
    atlas -a HelloWorld.atl
-
-   

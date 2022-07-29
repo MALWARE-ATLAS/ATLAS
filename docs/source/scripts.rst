@@ -77,7 +77,7 @@ If the script contains null bytes, they must be encoded in the script:
 
         return True
 
-When ATLAS tries to execute a rule that contains the above function as a _script_, the base64 module will raise an exception due to null bytes.
+When ATLAS tries to execute a rule that contains the above function as a script, the base64 module will raise an exception due to null bytes.
 
 .. code-block:: python
     :caption: Null byte solution
