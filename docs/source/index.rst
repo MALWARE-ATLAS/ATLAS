@@ -19,28 +19,28 @@ If these techniques are transformed into LEGO pieces properly, it eventually cre
 .. code-block:: yaml
 
    meta:
-      name: "rtf_template_injection"
-      description: "A rule to extracts rtf template injection"
-      reference: "https://www.proofpoint.com/us/blog/threat-insight/injection-new-black-novel-rtf-template-inject-technique-poised-widespread"
-      version: "1.0"
+   name: "rtf_template_injection"
+   description: "A rule to extracts rtf template injection"
+   reference: "https://www.proofpoint.com/us/blog/threat-insight/injection-new-black-novel-rtf-template-inject-technique-poised-widespread"
+   version: "1.0"
 
    scripts:
-      # import re
-      # import base64
-      
-      # def run(data: bytes) -> str:
-      #     result = ''
+   # import re
+   # import base64
+   
+   # def run(data: bytes) -> str:
+   #     result = ''
 
-      #     encoded_template_pattr = "XHtcXFwqXFx0ZW1wbGF0ZVxzKyguKylccypcfQ=="
-      #     result = re.search(base64.b64decode(encoded_template_pattr), data).group(1).decode()
+   #     encoded_template_pattr = "XHtcXFwqXFx0ZW1wbGF0ZVxzKyguKylccypcfQ=="
+   #     result = re.search(base64.b64decode(encoded_template_pattr), data).group(1).decode()
 
-      #     return result
-      s1: "aW1wb3J0IHJlCmltcG9ydCBiYXNlNjQKIApkZWYgcnVuKGRhdGE6IGJ5dGVzKSAtPiBzdHI6CiAgICByZXN1bHQgPSAnJwoKICAgIGVuY29kZWRfdGVtcGxhdGVfcGF0dHIgPSAiWEh0Y1hGd3FYRngwWlcxd2JHRjBaVnh6S3lndUt5bGNjeXBjZlE9PSIKICAgIHJlc3VsdCA9IHJlLnNlYXJjaChiYXNlNjQuYjY0ZGVjb2RlKGVuY29kZWRfdGVtcGxhdGVfcGF0dHIpLCBkYXRhKS5ncm91cCgxKS5kZWNvZGUoKQoKICAgIHJldHVybiByZXN1bHQ="
+   #     return result
+   s1: "aW1wb3J0IHJlCmltcG9ydCBiYXNlNjQKIApkZWYgcnVuKGRhdGE6IGJ5dGVzKSAtPiBzdHI6CiAgICByZXN1bHQgPSAnJwoKICAgIGVuY29kZWRfdGVtcGxhdGVfcGF0dHIgPSAiWEh0Y1hGd3FYRngwWlcxd2JHRjBaVnh6S3lndUt5bGNjeXBjZlE9PSIKICAgIHJlc3VsdCA9IHJlLnNlYXJjaChiYXNlNjQuYjY0ZGVjb2RlKGVuY29kZWRfdGVtcGxhdGVfcGF0dHIpLCBkYXRhKS5ncm91cCgxKS5kZWNvZGUoKQoKICAgIHJldHVybiByZXN1bHQ="
 
    chain:
-      file_read:
-         input: $param.file
-         func: file_read_bin
+   file_read:
+      input: $param.file
+      func: file_read_bin
 
    template_extract:
       input: 
@@ -48,15 +48,22 @@ If these techniques are transformed into LEGO pieces properly, it eventually cre
          - $file_read
       func: python_executor
 
-   stdout_inject:
+   download:
       input: $template_extract
-      func: printer
+      func: download_from_remote_server
+
+   save_template:
+      input: 
+         - $download
+         - "template_"
+      func: save_file_bytes
 
 When the above rule is processed by ATLAS:
 
 * It reads the file according to command-line argument,
 * Then runs the python script that is defined in **scripts** section,
-* And prints if there is any matched patter.
+* Tries to downloads the template from the matched pattern,
+* And saves the downloaded data to the disk.
 
 .. note::
 

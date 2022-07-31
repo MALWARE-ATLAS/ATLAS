@@ -42,15 +42,22 @@ chain:
         - $file_read
     func: python_executor
 
-  stdout_inject:
+  download:
     input: $template_extract
-    func: printer
+    func: download_from_remote_server
+
+  save_template:
+    input: 
+      - $download
+      - "template_"
+    func: save_file_bytes
 ```
 
 When the above rule is processed by ATLAS:
 * It reads the file according to command-line argument,
 * Then runs the python script that is defined in **scripts** section,
-* And prints if there is any matched patter.
+* Tries to downloads the template from the matched pattern,
+* And saves the downloaded data to the disk.
 
 
 ## Installation

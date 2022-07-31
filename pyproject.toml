@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "malware-atlas"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 readme = "README.md"
 authors = [{ name = "Mert Degirmenci"}]
@@ -34,7 +34,7 @@ Homepage = "https://github.com/malware-atlas/atlas"
 atlas = "src.atlas:main"
 
 [tool.bumpver]
-current_version = "0.1.2"
+current_version = "0.1.3"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
