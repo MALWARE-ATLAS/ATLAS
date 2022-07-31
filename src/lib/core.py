@@ -184,7 +184,7 @@ def python_executor(script_tuple: tuple, *args) -> any:
         except AttributeError:
             func = getattr(imported, 'run')
 
-        func(*args)
+        result = func(*args)
     except Exception as e:
         sys.stderr.write(str(e))
 

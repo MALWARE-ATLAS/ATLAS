@@ -5,9 +5,9 @@ import platform
 
 from pprint import pprint
 
-from .lib.screen import printer
-from .lib.executor import executor 
-from .lib.linker_loader import linker
+from lib.screen import printer
+from lib.executor import executor 
+from lib.linker_loader import linker
 
 # https://sumit-ghosh.com/articles/parsing-dictionary-key-value-pairs-kwargs-argparse-python/
 class parse_params(argparse.Action):
@@ -25,8 +25,8 @@ def main() -> bool:
 
     epilog = """Example Usage:
 
-  atlas HelloWorld.atl
-  atlas some.atl --param foo=bar
+  atlas -a HelloWorld.atl
+  atlas -a some.atl --param foo=bar
     """
     argumentParser = argparse.ArgumentParser(
         "ATLAS",
