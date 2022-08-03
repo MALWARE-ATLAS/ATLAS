@@ -120,6 +120,17 @@ def file_read_bin(path: str) -> bytes:
         sys.stderr.write(str(e))
 
     return result
+
+def file_read_utf8(path: str) -> str:
+    result = ''
+
+    try:
+        with open(path, 'r') as file:
+            result = file.read()
+    except Exception as e:
+        sys.stderr.write(str(e))
+
+    return result
     
 
 def save_file_bytes(data: any, prefix: str = '') -> bool:

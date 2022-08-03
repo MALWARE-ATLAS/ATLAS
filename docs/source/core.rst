@@ -33,6 +33,13 @@ The library that does the actual execution.
   :param str path: File's path.
   :return: Bytes object of the file's content.
 
+.. py:function:: file_read_utf8(...)
+
+  Performs utf8 file read operation.
+
+  :param str path: File's path.
+  :return: The file's content.
+
 .. py:function:: save_file_bytes(...)
 
   Performs binary file write operation.
@@ -69,3 +76,17 @@ The library that does the actual execution.
   Prints "Hello World, ATLAS." string. Can be used as a test.
 
   :return: None.
+
+.. py:function:: bytes_to_str_utf8(...)
+
+  UTF8 decodes byte object. 
+
+  :param bytes data: Bytes data.
+  :return: UTF8 string.
+
+.. py:function:: get_sha256(...)
+
+  Calculates sha256 checksum.
+
+  :param bytes data: Bytes data.
+  :return: sha256 checksum.
