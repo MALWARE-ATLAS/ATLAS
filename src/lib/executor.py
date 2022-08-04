@@ -7,6 +7,8 @@ from typing import Dict, List, final
 from contextlib import redirect_stdout, redirect_stderr
 from collections import OrderedDict
 
+from . import linker_loader
+
 
 def node_to_dict(node: object, stdout: str, stderr: str) -> Dict:
     result = {
@@ -76,9 +78,16 @@ def executor(linked: object, s_printer: object) -> bool:
                         temp = linked.CHAIN
 
                         try:
-                            for z in keys:
-                                temp = temp[z]
-                            linked.CHAIN[i][j].input[k] = temp.output
+                            for z in range(len(keys)):
+                                temp = temp[keys[z]]
+                                if type(temp) is linker_loader.node and\
+                                   type(temp.output) is dict and\
+                                   len(keys) - 1 > z:
+                                    temp = temp.output
+                            if type(temp) is linker_loader.node:
+                                linked.CHAIN[i].input[k] = temp.output
+                            else:
+                                linked.CHAIN[i].input[k] = temp
                         except Exception as e:
                             print(e)
                             return result
@@ -136,9 +145,16 @@ def executor(linked: object, s_printer: object) -> bool:
                     temp = linked.CHAIN
 
                     try:
-                        for z in keys:
-                            temp = temp[z]
-                        linked.CHAIN[i].input[k] = temp.output
+                        for z in range(len(keys)):
+                            temp = temp[keys[z]]
+                            if type(temp) is linker_loader.node and\
+                               type(temp.output) is dict and\
+                               len(keys) - 1 > z:
+                                temp = temp.output
+                        if type(temp) is linker_loader.node:
+                            linked.CHAIN[i].input[k] = temp.output
+                        else:
+                            linked.CHAIN[i].input[k] = temp
                     except Exception as e:
                         print(e)
                         return result
