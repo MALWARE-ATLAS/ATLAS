@@ -79,14 +79,22 @@ def powershell_executor(script_name: tuple, *args) -> any:
                 proc.stdin.flush()
 
             args_list.append("$arg{}".format(i + 1))
-        proc.stdin.write('\
+            proc.stdin.write('\
                 try {{\
                     $result={0} {1};\
                 }}\
                 catch {{\
                     $result=run {1};\
                 }}\
-                $result_encoded=[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($result));\
+                \
+                if ( $result.gettype().Name -eq "Byte[]" )\
+                {{\
+                    $result_encoded=[System.Convert]::ToBase64String($result);\
+                }}\
+                else\
+                {{\
+                    $result_encoded=[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($result));\
+                }}\
                 $temp_file=New-TemporaryFile;\
                 $return_file_path=Join-Path -Path $temp_file.DirectoryName -ChildPath $temp_file.Name;\
                 Set-Content $return_file_path -Value $result_encoded -Encoding Ascii;\
