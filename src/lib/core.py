@@ -79,7 +79,7 @@ def powershell_executor(script_name: tuple, *args) -> any:
                 proc.stdin.flush()
 
             args_list.append("$arg{}".format(i + 1))
-            proc.stdin.write('\
+        proc.stdin.write('\
                 try {{\
                     $result={0} {1};\
                 }}\
