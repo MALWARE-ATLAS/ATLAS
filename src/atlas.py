@@ -3,11 +3,14 @@
 import argparse
 import platform
 
-from pprint import pprint
-
-from lib.screen import printer
-from lib.executor import executor 
-from lib.linker_loader import linker
+try:
+    from .lib.screen import printer
+    from .lib.executor import executor 
+    from .lib.linker_loader import linker
+except:
+    from lib.screen import printer
+    from lib.executor import executor 
+    from lib.linker_loader import linker
 
 # https://sumit-ghosh.com/articles/parsing-dictionary-key-value-pairs-kwargs-argparse-python/
 class parse_params(argparse.Action):

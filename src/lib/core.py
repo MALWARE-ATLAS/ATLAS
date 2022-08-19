@@ -133,7 +133,7 @@ def file_read_utf8(path: str) -> str:
     result = ''
 
     try:
-        with open(path, 'r') as file:
+        with open(path, 'r', encoding="utf8") as file:
             result = file.read()
     except Exception as e:
         sys.stderr.write(str(e))
