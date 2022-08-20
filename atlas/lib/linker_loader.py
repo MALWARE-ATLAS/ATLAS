@@ -63,7 +63,7 @@ class linker:
     MODULES = {}
     SCRIPTS = {}
 
-    def __init__(self:object, file_name: str, param: dict={}) -> None:
+    def __init__(self: object, file_name: str, param: dict={}) -> None:
         global ATL
         self.file_name = file_name
         self.param = param

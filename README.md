@@ -75,14 +75,22 @@ git clone https://github.com/malware-atlas/atlas
 ```
 
 
-## Test Run
+## Usage
 
 The [HelloWorld](https://github.com/MALWARE-ATLAS/ATLAS/blob/master/HelloWorld.atl) rule can be used to test the installation.
 
-To test it:
+To test it as a stand-alone tool:
 
 ``` bash
 atlas -a HelloWorld.atl
+```
+
+Or it can be used as a package:
+``` bash
+>>> from atlas import atlas
+>>> atl = atlas("HelloWorld.atl")
+>>> atl.execute()
+True
 ```
 
 

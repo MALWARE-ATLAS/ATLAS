@@ -1,6 +1,3 @@
-# Test rules
-ATLAS/
-
 # OS artifacts
 *.swp
 .DS_Store

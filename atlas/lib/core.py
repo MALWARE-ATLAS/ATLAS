@@ -141,8 +141,8 @@ def file_read_utf8(path: str) -> str:
     return result
     
 
-def save_file_bytes(data: any, prefix: str = '') -> bool:
-    result = False
+def save_file_bytes(data: any, prefix: str = '') -> str:
+    result = ""
     sha256 = get_sha256(data)
 
     try:
@@ -157,7 +157,7 @@ def save_file_bytes(data: any, prefix: str = '') -> bool:
         sys.stderr.write(str(e))
         return result
     
-    result = True
+    result = "{}{}.bin".format(prefix, sha256)
 
     return result
 

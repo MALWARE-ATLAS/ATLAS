@@ -53,7 +53,6 @@ class printer:
 
 
     def __init__(self, 
-                 plat: str,
                  is_banner: bool=True) -> None:
         if is_banner:
             print('\033[2J\033[1;1H')
@@ -61,11 +60,6 @@ class printer:
             print()
             print('\033[1m' + "        ATLAS - Malware Analysis Description" + '\033[0m')
             print()
-
-        try:
-            self.rows, self.columns = os.popen('stty size', 'r').read().split()
-        except:
-            self.columns = 80
 
     # https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal
     def status(self, 
