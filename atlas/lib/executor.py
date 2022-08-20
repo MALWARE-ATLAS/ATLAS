@@ -3,7 +3,7 @@ import threading
 import json
 import io
 
-from typing import Dict, List, final
+from typing import Dict
 from contextlib import redirect_stdout, redirect_stderr
 from collections import OrderedDict
 
