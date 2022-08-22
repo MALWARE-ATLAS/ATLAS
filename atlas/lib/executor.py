@@ -1,13 +1,12 @@
-import time
-import threading
-import json
 import io
+import json
+import threading
 
 from typing import Dict
 from contextlib import redirect_stdout, redirect_stderr
 from collections import OrderedDict
 
-from . import linker_loader
+from . import linker_loader, error
 
 
 def node_to_dict(node: object, stdout: str, stderr: str) -> Dict:
@@ -41,6 +40,7 @@ def node_to_dict(node: object, stdout: str, stderr: str) -> Dict:
         elif type(node.output) == bytes:
             result['output'] = str(node.output[:50])
         elif type(node.output) == bool:
+            print(node.output)
             result['output'] = node.output
         else:
             result['output'] = str(type(node.output))
@@ -55,7 +55,7 @@ def node_to_dict(node: object, stdout: str, stderr: str) -> Dict:
 
 
 
-def executor(linked: object, s_printer: object) -> bool:
+def executor(linked: object, s_printer: object, param: dict={}) -> bool:
     result = False
 
     for i in linked.CHAIN:
@@ -75,22 +75,28 @@ def executor(linked: object, s_printer: object) -> bool:
                 for k in range(0, len(linked.CHAIN[i][j].input)):
                     if linked.CHAIN[i][j].input[k][0] == '$':
                         keys = linked.CHAIN[i][j].input[k][1:].split('.')
-                        temp = linked.CHAIN
+                        if keys[0] == 'param':
+                            try:
+                                linked.CHAIN[i][j].input[k] = param[keys[1]]
+                            except:
+                                raise(error.ParamKeyMissing(keys[1]))
+                        else:
+                            temp = linked.CHAIN
 
-                        try:
-                            for z in range(len(keys)):
-                                temp = temp[keys[z]]
-                                if type(temp) is linker_loader.node and\
-                                   type(temp.output) is dict and\
-                                   len(keys) - 1 > z:
-                                    temp = temp.output
-                            if type(temp) is linker_loader.node:
-                                linked.CHAIN[i].input[k] = temp.output
-                            else:
-                                linked.CHAIN[i].input[k] = temp
-                        except Exception as e:
-                            print(e)
-                            return result
+                            try:
+                                for z in range(len(keys)):
+                                    temp = temp[keys[z]]
+                                    if type(temp) is linker_loader.node and\
+                                    type(temp.output) is dict and\
+                                    len(keys) - 1 > z:
+                                        temp = temp.output
+                                if type(temp) is linker_loader.node:
+                                    linked.CHAIN[i].input[k] = temp.output
+                                else:
+                                    linked.CHAIN[i].input[k] = temp
+                            except Exception as e:
+                                print(e)
+                                return result
                 
 
                 with redirect_stdout(io.StringIO()) as stdout, \
@@ -108,22 +114,23 @@ def executor(linked: object, s_printer: object) -> bool:
                             break
                         elif k == len(linked.CHAIN[i][j].expect) - 1:
                             positive = True
+                            linked.CHAIN[i][j].output = res
 
-                            s_printer.return_code = 99
+                            s_printer.return_code = 0
                             thread1.join()
                             node_dict = node_to_dict(linked.CHAIN[i][j], stdout.getvalue(), stderr.getvalue())
                             print(json.dumps(node_dict, indent=8))
                             print()
-                            
-                            linked.CHAIN[i][j].output = res
+
                             linked.CHAIN[i] = linked.CHAIN[i][j]
+                            
                     if positive:
                         break
                 elif res == True:
                     positive = True
                     linked.CHAIN[i] = linked.CHAIN[i][j]
                     
-                    s_printer.return_code = 99
+                    s_printer.return_code = 0
                     thread1.join()
                     node_dict = node_to_dict(linked.CHAIN[i][j], stdout.getvalue(), stderr.getvalue())
                     print(json.dumps(node_dict, indent=8))
@@ -139,25 +146,32 @@ def executor(linked: object, s_printer: object) -> bool:
                 args=(i,),
                 daemon=True)
             thread1.start()
+
             for k in range(0, len(linked.CHAIN[i].input)):
                 if linked.CHAIN[i].input[k][0] == '$':
                     keys = linked.CHAIN[i].input[k][1:].split('.')
-                    temp = linked.CHAIN
+                    if keys[0] == 'param':
+                        try:
+                            linked.CHAIN[i].input[k] = param[keys[1]]
+                        except:
+                            raise(error.ParamKeyMissing(keys[1]))
+                    else:
+                        temp = linked.CHAIN
 
-                    try:
-                        for z in range(len(keys)):
-                            temp = temp[keys[z]]
-                            if type(temp) is linker_loader.node and\
-                               type(temp.output) is dict and\
-                               len(keys) - 1 > z:
-                                temp = temp.output
-                        if type(temp) is linker_loader.node:
-                            linked.CHAIN[i].input[k] = temp.output
-                        else:
-                            linked.CHAIN[i].input[k] = temp
-                    except Exception as e:
-                        print(e)
-                        return result
+                        try:
+                            for z in range(len(keys)):
+                                temp = temp[keys[z]]
+                                if type(temp) is linker_loader.node and\
+                                type(temp.output) is dict and\
+                                len(keys) - 1 > z:
+                                    temp = temp.output
+                            if type(temp) is linker_loader.node:
+                                linked.CHAIN[i].input[k] = temp.output
+                            else:
+                                linked.CHAIN[i].input[k] = temp
+                        except Exception as e:
+                            print(e)
+                            return result
 
 
             with redirect_stdout(io.StringIO()) as stdout, \
@@ -194,7 +208,7 @@ def executor(linked: object, s_printer: object) -> bool:
     return result
 
 
-def executor_silent(linked: object) -> bool:
+def executor_silent(linked: object, param: dict={}) -> bool:
     result = False
 
     for i in linked.CHAIN:
@@ -207,22 +221,28 @@ def executor_silent(linked: object) -> bool:
                 for k in range(0, len(linked.CHAIN[i][j].input)):
                     if linked.CHAIN[i][j].input[k][0] == '$':
                         keys = linked.CHAIN[i][j].input[k][1:].split('.')
-                        temp = linked.CHAIN
+                        if keys[0] == 'param':
+                            try:
+                                linked.CHAIN[i][j].input[k] = param[keys[1]]
+                            except:
+                                raise(error.ParamKeyMissing(keys[1]))
+                        else:
+                            temp = linked.CHAIN
 
-                        try:
-                            for z in range(len(keys)):
-                                temp = temp[keys[z]]
-                                if type(temp) is linker_loader.node and\
-                                   type(temp.output) is dict and\
-                                   len(keys) - 1 > z:
-                                    temp = temp.output
-                            if type(temp) is linker_loader.node:
-                                linked.CHAIN[i].input[k] = temp.output
-                            else:
-                                linked.CHAIN[i].input[k] = temp
-                        except Exception as e:
-                            print(e)
-                            return result
+                            try:
+                                for z in range(len(keys)):
+                                    temp = temp[keys[z]]
+                                    if type(temp) is linker_loader.node and\
+                                    type(temp.output) is dict and\
+                                    len(keys) - 1 > z:
+                                        temp = temp.output
+                                if type(temp) is linker_loader.node:
+                                    linked.CHAIN[i].input[k] = temp.output
+                                else:
+                                    linked.CHAIN[i].input[k] = temp
+                            except Exception as e:
+                                print(e)
+                                return result
                 
 
                 with redirect_stdout(io.StringIO()) as stdout, \
@@ -252,22 +272,28 @@ def executor_silent(linked: object) -> bool:
             for k in range(0, len(linked.CHAIN[i].input)):
                 if linked.CHAIN[i].input[k][0] == '$':
                     keys = linked.CHAIN[i].input[k][1:].split('.')
-                    temp = linked.CHAIN
+                    if keys[0] == 'param':
+                        try:
+                            linked.CHAIN[i].input[k] = param[keys[1]]
+                        except:
+                            raise(error.ParamKeyMissing(keys[1]))
+                    else:
+                        temp = linked.CHAIN
 
-                    try:
-                        for z in range(len(keys)):
-                            temp = temp[keys[z]]
-                            if type(temp) is linker_loader.node and\
-                               type(temp.output) is dict and\
-                               len(keys) - 1 > z:
-                                temp = temp.output
-                        if type(temp) is linker_loader.node:
-                            linked.CHAIN[i].input[k] = temp.output
-                        else:
-                            linked.CHAIN[i].input[k] = temp
-                    except Exception as e:
-                        print(e)
-                        return result
+                        try:
+                            for z in range(len(keys)):
+                                temp = temp[keys[z]]
+                                if type(temp) is linker_loader.node and\
+                                type(temp.output) is dict and\
+                                len(keys) - 1 > z:
+                                    temp = temp.output
+                            if type(temp) is linker_loader.node:
+                                linked.CHAIN[i].input[k] = temp.output
+                            else:
+                                linked.CHAIN[i].input[k] = temp
+                        except Exception as e:
+                            print(e)
+                            return result
 
 
             with redirect_stdout(io.StringIO()) as stdout, \

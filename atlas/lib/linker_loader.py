@@ -63,10 +63,9 @@ class linker:
     MODULES = {}
     SCRIPTS = {}
 
-    def __init__(self: object, file_name: str, param: dict={}) -> None:
+    def __init__(self: object, file_name: str) -> None:
         global ATL
         self.file_name = file_name
-        self.param = param
 
         temp_file_name, file_extension = os.path.splitext(self.file_name)
         self.base_name = os.path.basename(temp_file_name)
@@ -417,10 +416,7 @@ class linker:
                         if self.CHAIN[i][j].input[k][0] == '$':
                             keys = self.CHAIN[i][j].input[k][1:].split('.')
                             if keys[0] == 'param':
-                                try:
-                                    self.CHAIN[i][j].input[k] = self.param[keys[1]]
-                                except:
-                                    raise(error.ParamKeyMissing(keys[1]))
+                                continue
                             else:
                                 value = ATL[self.base_name]
 
@@ -453,10 +449,7 @@ class linker:
                     if self.CHAIN[i].input[j][0] == '$':
                         keys = self.CHAIN[i].input[j][1:].split('.')
                         if keys[0] == 'param':
-                            try:
-                                self.CHAIN[i].input[j] = self.param[keys[1]]
-                            except:
-                                raise(error.ParamKeyMissing(keys[1]))
+                            continue
                         else:
                             value = ATL[self.base_name]
 

@@ -2,6 +2,9 @@
 
 import argparse
 
+from copy import deepcopy
+from glob import glob
+
 try:
     from .lib.screen import printer
     from .lib.executor import executor
@@ -25,20 +28,47 @@ class parse_params(argparse.Action):
 class ATLAS:
 
     def __init__(self, file_name: str, param: dict={}, printer: object=None) -> None:
-        self.file_name = file_name
-        self.param = param
-        self.printer = printer
+        self.result = []
 
-        self.linked = linker(self.file_name, self.param)
+        self.file_name = file_name
+        self.printer = printer
+        self.param_file_arr = []
+
+        if param.get('file', '') != '':
+            try:
+                self.param_file_arr = glob(param['file'])
+                self.param = param
+                if len(self.param_file_arr) > 0:
+                    self.param['file'] = ""
+            except:
+                self.param = param
+        else:
+            self.param = param
+
+        self.linked = linker(self.file_name)
+
 
     def execute(self) -> bool:
         result = False
+        temp_param = {}
 
         if self.linked != None:
             if self.printer != None:
-                result = executor(self.linked, self.printer)
+                if len(self.param_file_arr) > 0:
+                    temp_param = self.param
+                    for i in self.param_file_arr:
+                        temp_param['file'] = i
+                        self.result.append(executor(deepcopy(self.linked), self.printer, temp_param))
+                else:
+                    self.result.append(executor(deepcopy(self.linked), self.printer, self.param))
             else:
-                result = executor_silent(self.linked)
+                if len(self.param_file_arr) > 0:
+                    temp_param = self.param
+                    for i in self.param_file_arr:
+                        temp_param['file'] = i
+                        self.result.append(executor(deepcopy(self.linked), temp_param))
+                else:
+                    self.result.append(executor(deepcopy(self.linked), self.param))
 
         return result
 
@@ -75,8 +105,10 @@ def main() -> bool:
     args = argumentParser.parse_args()
     
     file_name = args.atl_file[0]
-
-    atlas = ATLAS(file_name, args.param, s_printer)
+    if args.param:
+        atlas = ATLAS(file_name, param=args.param, printer=s_printer)
+    else:
+        atlas = ATLAS(file_name, printer=s_printer)
     atlas.execute()
 
     return True

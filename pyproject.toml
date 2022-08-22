@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "malware-atlas"
-version = "0.2.11"
+version = "0.2.12"
 description = "ATLAS - Malware Analysis Description"
 readme = "README.md"
 authors = [{ name = "Mert Degirmenci"}]
