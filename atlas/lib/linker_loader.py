@@ -85,7 +85,23 @@ class linker:
             
             self.loader()
 
-            
+
+    def __del__(self):
+        global ATL
+        global META
+        global CHAIN
+        global MODULES
+        global MODULE_NAMES
+        global SCRIPTS
+        global SUBCHAIN_KEYS
+
+        ATL = {}
+        META = {}
+        CHAIN = []
+        MODULES = {}
+        MODULE_NAMES = set()
+        SCRIPTS = {}
+        SUBCHAIN_KEYS = []    
 
 
     def link(self: object, file_name: str) -> yaml:
