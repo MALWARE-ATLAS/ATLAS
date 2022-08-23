@@ -82,3 +82,55 @@ class printer:
         else:
             print('\t' * tab_count + '\033[91m' + f"[+] " + subchain + '\033[0m')
         self.return_code = -1
+
+    
+    def json_dumps(self,
+                   node_dict: dict,
+                   indent: int=4) -> None:
+        print(json.dumps(self.excerpt(node_dict), indent=indent))
+        print()
+
+
+    @staticmethod
+    def excerpt(node_dict: dict) -> dict:
+        result = {
+            'func': '',
+            'input': [],
+            'expect': [],
+            'output': None
+        }
+
+        try:
+            result['func'] = node_dict['func']
+            result['expect'] = node_dict['expect']
+            
+            for i in node_dict['input']:
+                if type(i) == str:
+                    result['input'].append(i[:50])
+                elif type(i) == int:
+                    result['input'].append(int(str(i)[:50]))
+                elif type(i) == bytes:
+                    result['input'].append(str(i[:50]))
+                elif type(i) == bool:
+                    result['input'].append(i)
+                else:
+                    result['input'].append(str(type(i)))
+
+            if type(node_dict['output']) == str:
+                result['output'] = node_dict['output'][:50]
+            elif type(node_dict['output']) == int:
+                result['output'] = int(str(node_dict['output'])[:50])
+            elif type(node_dict['output']) == bytes:
+                result['output'] = str(node_dict['output'][:50])
+            elif type(node_dict['output']) == bool:
+                result['output'] = node_dict['output']
+            else:
+                result['output'] = str(type(node_dict['output']))
+            
+
+            result['stdout'] = node_dict['stdout'][:200]
+            result['stderr'] = node_dict['stderr'][:200]
+        except Exception as e:
+            print(e)
+        
+        return result

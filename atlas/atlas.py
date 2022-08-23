@@ -8,13 +8,12 @@ from glob import glob
 try:
     from .lib.screen import printer
     from .lib.executor import executor
-    from .lib.executor import executor_silent
     from .lib.linker_loader import linker
 except:
     from lib.screen import printer
     from lib.executor import executor
-    from lib.executor import executor_silent
     from lib.linker_loader import linker
+
 
 # https://sumit-ghosh.com/articles/parsing-dictionary-key-value-pairs-kwargs-argparse-python/
 class parse_params(argparse.Action):
@@ -48,27 +47,19 @@ class ATLAS:
         self.linked = linker(self.file_name)
 
 
-    def execute(self) -> bool:
-        result = False
+    def execute(self) -> list:
+        result = []
         temp_param = {}
 
         if self.linked != None:
-            if self.printer != None:
-                if len(self.param_file_arr) > 0:
-                    temp_param = self.param
-                    for i in self.param_file_arr:
-                        temp_param['file'] = i
-                        self.result.append(executor(deepcopy(self.linked), self.printer, temp_param))
-                else:
-                    self.result.append(executor(deepcopy(self.linked), self.printer, self.param))
+            if len(self.param_file_arr) > 0:
+                temp_param = self.param
+                for i in self.param_file_arr:
+                    temp_param['file'] = i
+                    result.append(executor(deepcopy(self.linked), self.printer, temp_param))
             else:
-                if len(self.param_file_arr) > 0:
-                    temp_param = self.param
-                    for i in self.param_file_arr:
-                        temp_param['file'] = i
-                        self.result.append(executor(deepcopy(self.linked), temp_param))
-                else:
-                    self.result.append(executor(deepcopy(self.linked), self.param))
+                result.append(executor(deepcopy(self.linked), self.printer, self.param))
+
 
         return result
 
@@ -109,7 +100,7 @@ def main() -> bool:
         atlas = ATLAS(file_name, param=args.param, printer=s_printer)
     else:
         atlas = ATLAS(file_name, printer=s_printer)
-    atlas.execute()
+    result = atlas.execute()
 
     return True
 
