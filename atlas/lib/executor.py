@@ -73,9 +73,9 @@ def executor(linked: object, s_printer: object=None, param: dict={}) -> dict:
                                     len(keys) - 1 > z:
                                         temp = temp.output
                                 if type(temp) is linker_loader.node:
-                                    linked.CHAIN[i].input[k] = temp.output
+                                    linked.CHAIN[i][j].input[k] = temp.output
                                 else:
-                                    linked.CHAIN[i].input[k] = temp
+                                    linked.CHAIN[i][j].input[k] = temp
                             except Exception as e:
                                 print(e)
                                 return result
