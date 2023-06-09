@@ -10,3 +10,4 @@ venv/
 __pycache__
 malware_atlas.egg-info/
 dist/
+setup.py
